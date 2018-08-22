@@ -70,6 +70,8 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 
-# Data file
+# Data files
 *.dat
 
+# Save files
+*.sav
