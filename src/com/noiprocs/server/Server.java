@@ -25,21 +25,28 @@ public class Server {
         }
 
         this.startService();
-        this.saveGame();
     }
 
     private void startService() {
         try {
             ServerSocket serverSocket = new ServerSocket(mPortNumber);
+            Thread clientListener = new Thread(new ClientListenerRunnable(serverSocket));
+            clientListener.start();
 
-            while (true) {
-                ClientThread clientThread = new ClientThread(serverSocket.accept());
-                Thread t = new Thread(clientThread);
-                t.start();
-            }
+            // Close server socket on JVM termination
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    serverSocket.close();
+                    this.saveGame();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("The server is shut down!");
+            }));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void saveGame() {
