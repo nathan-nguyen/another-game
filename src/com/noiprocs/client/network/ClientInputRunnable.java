@@ -1,4 +1,4 @@
-package com.noiprocs.client;
+package com.noiprocs.client.network;
 
 import java.io.BufferedReader;
 import java.io.IOException;

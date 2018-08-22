@@ -1,11 +1,10 @@
 package com.noiprocs.client;
 
-import java.io.BufferedReader;
+import com.noiprocs.client.network.ClientInputRunnable;
+import com.noiprocs.client.network.ClientOutputRunnable;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
     private String mHostName;

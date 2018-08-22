@@ -1,4 +1,6 @@
-package com.noiprocs.server;
+package com.noiprocs.server.network;
+
+import com.noiprocs.server.FileIO;
 
 import java.io.BufferedReader;
 import java.io.IOException;
