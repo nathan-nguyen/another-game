@@ -8,17 +8,21 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("java Client <ipAddress> <portNumber>");
-            return;
-        }
+    private String mHostName;
+    private int mPortNumber;
 
-        String hostName = args[0];
-        int portNumber = Integer.parseInt(args[1]);
+    public Client(String mHostName, int mPortNumber) {
+        this.mHostName = mHostName;
+        this.mPortNumber = mPortNumber;
+    }
 
+    private void run() {
+        this.startService();
+    }
+
+    private void startService() {
         try {
-            Socket s = new Socket(hostName, portNumber);
+            Socket s = new Socket(mHostName, mPortNumber);
             Scanner in = new Scanner(System.in);
             PrintWriter out = new PrintWriter(s.getOutputStream(), true);
             BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -49,5 +53,15 @@ public class Client {
         } catch (IOException e) {
             System.out.println("Cannot connect to server");
         }
+    }
+
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("java Client <ipAddress> <portNumber>");
+            return;
+        }
+
+        Client client = new Client(args[0], Integer.parseInt(args[1]));
+        client.run();
     }
 }

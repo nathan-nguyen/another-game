@@ -1,8 +1,11 @@
-package com.noiprocs.server;
+package com.noiprocs.server.loader;
+
+import com.noiprocs.server.Config;
 
 import java.io.*;
 
-public class GameLoader {
+public class GameLoader implements GameLoaderInterface {
+    @Override
     public void saveGame(Object o) {
         try {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(Config.SAVE_FILE)));
@@ -12,6 +15,7 @@ public class GameLoader {
         }
     }
 
+    @Override
     public Object loadGame() {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(new File(Config.SAVE_FILE)));
