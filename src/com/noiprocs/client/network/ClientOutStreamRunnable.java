@@ -5,10 +5,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientOutputRunnable implements Runnable {
+public class ClientOutStreamRunnable implements Runnable {
     private PrintWriter mPrintWriter;
 
-    public ClientOutputRunnable(Socket socket) {
+    public ClientOutStreamRunnable(Socket socket) {
         try {
             mPrintWriter = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {

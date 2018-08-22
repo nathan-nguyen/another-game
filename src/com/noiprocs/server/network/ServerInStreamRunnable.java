@@ -1,14 +1,14 @@
-package com.noiprocs.client.network;
+package com.noiprocs.server.network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class ClientInputRunnable implements Runnable {
+public class ServerInStreamRunnable implements Runnable {
     private BufferedReader mBufferReader;
 
-    public ClientInputRunnable(Socket socket) {
+    public ServerInStreamRunnable(Socket socket) {
         try {
             mBufferReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
@@ -23,10 +23,10 @@ public class ClientInputRunnable implements Runnable {
             while (true) {
                 answer = mBufferReader.readLine();
                 if (answer == null) {
-                    System.out.println("Server disconnected");
+                    System.out.println("Client disconnected");
                     break;
                 } else {
-                    System.out.println("[Server] :" + answer);
+                    System.out.println("[Client] :" + answer);
                 }
             }
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package com.noiprocs.client;
 
-import com.noiprocs.client.network.ClientInputRunnable;
-import com.noiprocs.client.network.ClientOutputRunnable;
+import com.noiprocs.client.network.ClientInStreamRunnable;
+import com.noiprocs.client.network.ClientOutStreamRunnable;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -24,10 +24,10 @@ public class Client {
             Socket socket = new Socket(mHostName, mPortNumber);
             System.out.println("Connected to Server");
 
-            Thread clientInputThread = new Thread(new ClientInputRunnable(socket));
+            Thread clientInputThread = new Thread(new ClientInStreamRunnable(socket));
             clientInputThread.start();
 
-            Thread clientOutputThread = new Thread(new ClientOutputRunnable(socket));
+            Thread clientOutputThread = new Thread(new ClientOutStreamRunnable(socket));
             clientOutputThread.start();
 
             // Close socket on JVM termination
@@ -40,6 +40,7 @@ public class Client {
                 System.out.println("Disconnected from server!");
             }));
         } catch (IOException e) {
+            System.out.println("Cannot connect to server " + mHostName + ":" + mPortNumber);
             e.printStackTrace();
         }
     }

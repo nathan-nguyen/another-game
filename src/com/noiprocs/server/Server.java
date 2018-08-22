@@ -3,10 +3,12 @@ package com.noiprocs.server;
 import com.noiprocs.core.WorldContainer;
 import com.noiprocs.server.loader.GameLoader;
 import com.noiprocs.server.loader.GameLoaderInterface;
-import com.noiprocs.server.network.ClientListenerRunnable;
+import com.noiprocs.server.network.ServerInStreamRunnable;
+import com.noiprocs.server.network.ServerOutStreamRunnable;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
     private int mPortNumber;
@@ -31,8 +33,6 @@ public class Server {
     private void startService() {
         try {
             ServerSocket serverSocket = new ServerSocket(mPortNumber);
-            Thread clientListener = new Thread(new ClientListenerRunnable(serverSocket));
-            clientListener.start();
 
             // Close server socket on JVM termination
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -42,8 +42,22 @@ public class Server {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("The server is shut down!");
+                System.out.println("Shutting down server!");
             }));
+
+            while (!serverSocket.isClosed()) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    System.out.println("Client connected!");
+                    Thread serverInStreamThread = new Thread(new ServerInStreamRunnable(socket));
+                    serverInStreamThread.start();
+
+                    Thread serverOutStreamThread = new Thread(new ServerOutStreamRunnable(socket));
+                    serverOutStreamThread.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
