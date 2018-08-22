@@ -7,18 +7,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Client{
-    public static void main(String[] args){
-        String hostName;
-        int portNumber;
-
-        try {
-            hostName = args[0];
-            portNumber = Integer.parseInt(args[1]);
-        } catch (Exception e){
+public class Client {
+    public static void main(String[] args) {
+        if (args.length != 2) {
             System.out.println("java Client <ipAddress> <portNumber>");
             return;
         }
+
+        String hostName = args[0];
+        int portNumber = Integer.parseInt(args[1]);
 
         try {
             Socket s = new Socket(hostName, portNumber);
@@ -41,8 +38,7 @@ public class Client{
                     }
 
                     System.out.println("[Server] : " + answer);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("Send message IO Exception");
                 }
@@ -50,8 +46,7 @@ public class Client{
                 message = in.nextLine();
             }
             s.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Cannot connect to server");
         }
     }

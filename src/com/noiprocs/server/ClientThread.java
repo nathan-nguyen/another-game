@@ -53,9 +53,8 @@ public class ClientThread implements Runnable {
     }
 
     public class OutputThread implements Runnable {
-        String updateData;
-
-        FileIO fileIO = FileIO.instance();
+        private static final String OUTPUT_FILE = "entry.dat";
+        private String updateData;
 
         // Update DB or log to file
         public OutputThread(String updateData) {
@@ -64,9 +63,9 @@ public class ClientThread implements Runnable {
 
         public void run() {
             try {
-                fileIO.appendEntry(updateData);
+                FileIO.instance().append(OUTPUT_FILE, updateData);
             } catch (IOException e) {
-                System.out.println("Cannot insert to DB");
+                e.printStackTrace();
             }
         }
     }

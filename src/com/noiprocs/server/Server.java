@@ -5,32 +5,24 @@ import java.net.ServerSocket;
 
 public class Server {
     public static void main(String[] args) {
-        int portNumber;
 
-        try {
-            portNumber = Integer.parseInt(args[0]);
-        } catch (Exception e) {
+        if (args.length != 1) {
             System.out.println("Port Number Required\n java Server <portNumber>");
             return;
         }
 
-        ServerSocket serverSocket = null;
+        int portNumber = Integer.parseInt(args[0]);
 
         try {
-            serverSocket = new ServerSocket(portNumber);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+            ServerSocket serverSocket = new ServerSocket(portNumber);
 
-        while (true) {
-            ClientThread clientThread;
-            try {
-                clientThread = new ClientThread(serverSocket.accept());
+            while (true) {
+                ClientThread clientThread = new ClientThread(serverSocket.accept());
                 Thread t = new Thread(clientThread);
                 t.start();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
