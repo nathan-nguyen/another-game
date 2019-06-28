@@ -1,4 +1,4 @@
-package com.noiprocs.client.network;
+package com.noiprocs.network.client;
 
 import java.io.IOException;
 import java.io.PrintWriter;

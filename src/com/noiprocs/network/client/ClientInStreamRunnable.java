@@ -1,4 +1,4 @@
-package com.noiprocs.client.network;
+package com.noiprocs.network.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class ClientInStreamRunnable implements Runnable {
                     System.out.println("Server disconnected");
                     break;
                 } else {
-                    System.out.println("[Server] :" + answer);
+                    System.out.println("[Server]: " + answer);
                 }
             }
         } catch (Exception e) {

@@ -1,7 +1,4 @@
-package com.noiprocs.client;
-
-import com.noiprocs.client.network.ClientInStreamRunnable;
-import com.noiprocs.client.network.ClientOutStreamRunnable;
+package com.noiprocs.network.client;
 
 import java.io.IOException;
 import java.net.Socket;
