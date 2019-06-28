@@ -15,7 +15,7 @@ public class ClientListenerRunnable implements Runnable {
 
     public ClientListenerRunnable(CommunicationManager mCommunicationManager) {
         this.mCommunicationManager = mCommunicationManager;
-        SenderInterface senderImplementation = new SenderImplementation();
+        MessageSenderInterface senderImplementation = new SenderImplementation();
         mCommunicationManager.setSender(senderImplementation);
     }
 
@@ -56,7 +56,7 @@ public class ClientListenerRunnable implements Runnable {
         }
     }
 
-    class SenderImplementation implements SenderInterface {
+    class SenderImplementation implements MessageSenderInterface {
         public void sendMessage(String message) {
             for (ServerOutStreamRunnable serverOutStreamRunnable: serverOutStreamRunnableList) {
                 serverOutStreamRunnable.sendMessage(message);

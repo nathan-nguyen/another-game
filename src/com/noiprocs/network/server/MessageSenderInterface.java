@@ -1,5 +1,5 @@
 package com.noiprocs.network.server;
 
-public interface SenderInterface {
+public interface MessageSenderInterface {
     void sendMessage(String message);
 }

@@ -3,13 +3,13 @@ package com.noiprocs.network.server;
 import java.util.Scanner;
 
 public class CommunicationManager {
-    private SenderInterface mSender;
+    private MessageSenderInterface mSender;
 
     public void receiveMessage(int clientId, String hashCode) {
         System.out.println(clientId + " - " + hashCode);
     }
 
-    public void setSender(SenderInterface mSender) {
+    public void setSender(MessageSenderInterface mSender) {
         this.mSender = mSender;
     }
 
