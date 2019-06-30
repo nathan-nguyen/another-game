@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+// TODO: Handle case to destroy when client disconnects
 public class ServerOutStreamRunnable implements Runnable {
     private PrintWriter mPrintWriter;
 

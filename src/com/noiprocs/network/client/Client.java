@@ -1,30 +1,35 @@
 package com.noiprocs.network.client;
 
+import com.noiprocs.network.CommunicationManager;
+import com.noiprocs.network.ServerInterface;
+
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client {
-    private String mHostName;
-    private int mPortNumber;
+public class Client implements ServerInterface {
+    private CommunicationManager communicationManager = new CommunicationManager();
+    private ClientOutStreamRunnable clientOutStreamRunnable;
 
-    public Client(String mHostName, int mPortNumber) {
-        this.mHostName = mHostName;
-        this.mPortNumber = mPortNumber;
+    private String hostName;
+    private int port;
+
+    public Client(String hostName, int port) {
+        this.hostName = hostName;
+        this.port = port;
+        communicationManager.setSender(this);
     }
 
-    private void run() {
-        this.startService();
-    }
-
-    private void startService() {
+    public void startService() {
         try {
-            Socket socket = new Socket(mHostName, mPortNumber);
+            Socket socket = new Socket(hostName, port);
             System.out.println("Connected to Server");
 
-            Thread clientInputThread = new Thread(new ClientInStreamRunnable(socket));
+            ClientInStreamRunnable clientInStreamRunnable = new ClientInStreamRunnable(socket, communicationManager);
+            Thread clientInputThread = new Thread(clientInStreamRunnable);
             clientInputThread.start();
 
-            Thread clientOutputThread = new Thread(new ClientOutStreamRunnable(socket));
+            clientOutStreamRunnable = new ClientOutStreamRunnable(socket);
+            Thread clientOutputThread = new Thread(clientOutStreamRunnable);
             clientOutputThread.start();
 
             // Close socket on JVM termination
@@ -37,10 +42,16 @@ public class Client {
                 System.out.println("Disconnected from server!");
             }));
         } catch (IOException e) {
-            System.out.println("Cannot connect to server " + mHostName + ":" + mPortNumber);
+            System.out.println("Cannot connect to server " + hostName + ":" + port);
             e.printStackTrace();
         }
     }
+
+    public CommunicationManager getCommunicationManager() {
+        return communicationManager;
+    }
+
+
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -49,6 +60,11 @@ public class Client {
         }
 
         Client client = new Client(args[0], Integer.parseInt(args[1]));
-        client.run();
+        client.startService();
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        clientOutStreamRunnable.sendMessage(message);
     }
 }

@@ -1,21 +1,22 @@
 package com.noiprocs.network.server;
 
-public class Server {
-    private CommunicationManager mCommunicationManager = new CommunicationManager();
+import com.noiprocs.network.CommunicationManager;
 
-    private void run() {
-        this.startService();
+public class Server {
+    private CommunicationManager communicationManager = new CommunicationManager();
+
+    public void startService() {
+        System.out.println("Server started");
+        Thread clientListenerThread = new Thread(new ClientListenerRunnable(communicationManager));
+        clientListenerThread.start();
     }
 
-    private void startService() {
-        System.out.println("Server started");
-        Thread clientListenerThread = new Thread(new ClientListenerRunnable(mCommunicationManager));
-        clientListenerThread.start();
-        mCommunicationManager.start();
+    public CommunicationManager getCommunicationManager() {
+        return communicationManager;
     }
 
     public static void main(String[] args) {
         Server server = new Server();
-        server.run();
+        server.startService();
     }
 }

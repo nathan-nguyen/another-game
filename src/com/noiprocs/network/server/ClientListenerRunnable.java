@@ -1,6 +1,8 @@
 package com.noiprocs.network.server;
 
+import com.noiprocs.network.CommunicationManager;
 import com.noiprocs.network.Config;
+import com.noiprocs.network.ServerInterface;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,15 +10,15 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientListenerRunnable implements Runnable {
+// TODO: Handle case when client disconnects, remove from serverOutStreamRunnableList
+public class ClientListenerRunnable implements Runnable, ServerInterface {
     private CommunicationManager mCommunicationManager;
     private List<ServerOutStreamRunnable> serverOutStreamRunnableList = new ArrayList<>();
 
 
     public ClientListenerRunnable(CommunicationManager mCommunicationManager) {
         this.mCommunicationManager = mCommunicationManager;
-        MessageSenderInterface senderImplementation = new SenderImplementation();
-        mCommunicationManager.setSender(senderImplementation);
+        mCommunicationManager.setSender(this);
     }
 
     @Override
@@ -56,11 +58,11 @@ public class ClientListenerRunnable implements Runnable {
         }
     }
 
-    class SenderImplementation implements MessageSenderInterface {
-        public void sendMessage(String message) {
-            for (ServerOutStreamRunnable serverOutStreamRunnable: serverOutStreamRunnableList) {
-                serverOutStreamRunnable.sendMessage(message);
-            }
+    @Override
+    public void sendMessage(String message) {
+        for (ServerOutStreamRunnable serverOutStreamRunnable: serverOutStreamRunnableList) {
+            serverOutStreamRunnable.sendMessage(message);
         }
     }
+
 }
