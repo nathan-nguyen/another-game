@@ -2,7 +2,7 @@ package com.noiprocs.network.server;
 
 import com.noiprocs.network.CommunicationManager;
 import com.noiprocs.network.Config;
-import com.noiprocs.network.ServerInterface;
+import com.noiprocs.network.SenderInterface;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Handle case when client disconnects, remove from serverOutStreamRunnableList
-public class ClientListenerRunnable implements Runnable, ServerInterface {
+public class ClientListenerRunnable implements Runnable, SenderInterface {
     private final CommunicationManager mCommunicationManager;
     private final List<ServerOutStreamRunnable> serverOutStreamRunnableList = new ArrayList<>();
 
@@ -40,8 +40,8 @@ public class ClientListenerRunnable implements Runnable, ServerInterface {
             while (!serverSocket.isClosed()) {
                 try {
                     Socket socket = serverSocket.accept();
-                    System.out.println("Client connected!");
                     ServerInStreamRunnable serverInStreamRunnable = new ServerInStreamRunnable(socket, mCommunicationManager);
+                    mCommunicationManager.clientConnectionNotify(serverInStreamRunnable.hashCode());
                     Thread serverInStreamThread = new Thread(serverInStreamRunnable);
                     serverInStreamThread.start();
 

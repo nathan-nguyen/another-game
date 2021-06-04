@@ -1,12 +1,12 @@
 package com.noiprocs.network.client;
 
 import com.noiprocs.network.CommunicationManager;
-import com.noiprocs.network.ServerInterface;
+import com.noiprocs.network.SenderInterface;
 
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client implements ServerInterface {
+public class Client implements SenderInterface {
     private final CommunicationManager communicationManager = new CommunicationManager();
     private ClientOutStreamRunnable clientOutStreamRunnable;
 

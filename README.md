@@ -1,9 +1,16 @@
 # network-client-server
 
-Prototype
+## Architecture
 
-Client -- Server -- Client
+Server
+- serverId
+- communicationManager
+- startService()
+    - Start thread with ClientListenerRunnable(serverId, communicationManager)
+  
+Client
+- clientId
+- hostname
+- port
+- communicationManager
 
-Clients send action to Server
-
-Server sends position and status of game objects to Clients

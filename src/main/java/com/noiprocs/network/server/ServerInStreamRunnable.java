@@ -28,7 +28,7 @@ public class ServerInStreamRunnable implements Runnable {
             while (true) {
                 answer = mBufferReader.readLine();
                 if (answer == null) {
-                    System.out.println("Client disconnected");
+                    // Notify server that client is disconnected
                     mCommunicationManager.clientDisconnect(this.hashCode());
                     break;
                 }
@@ -36,6 +36,7 @@ public class ServerInStreamRunnable implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Notify server that client is disconnected
             mCommunicationManager.clientDisconnect(this.hashCode());
         }
     }

@@ -3,14 +3,20 @@ package com.noiprocs.network;
 import java.util.Scanner;
 
 public class CommunicationManager {
-    private ServerInterface mSender;
+    private SenderInterface mSender;
     private ClientInterface receiver;
 
     public void serverDisconnect() {
         receiver.serverDisconnect();
     }
 
+    public void clientConnectionNotify(int clientId) {
+        System.out.println("Client " + clientId + " connected!");
+        receiver.clientConnectionNotify(clientId);
+    }
+
     public void clientDisconnect(int clientId) {
+        System.out.println("Client " + clientId + " dis-connected!");
         receiver.clientDisconnect(clientId);
     }
 
@@ -18,7 +24,7 @@ public class CommunicationManager {
         receiver.receiveMessage(clientId, message);
     }
 
-    public void setSender(ServerInterface mSender) {
+    public void setSender(SenderInterface mSender) {
         this.mSender = mSender;
     }
 
