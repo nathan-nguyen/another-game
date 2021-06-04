@@ -1,4 +1,4 @@
-# another-game
+# network-client-server
 
 Prototype
 

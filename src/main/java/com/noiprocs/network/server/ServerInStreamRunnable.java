@@ -9,7 +9,7 @@ import java.net.Socket;
 
 // TODO: Handle case to destroy when client disconnects
 public class ServerInStreamRunnable implements Runnable {
-    private CommunicationManager mCommunicationManager;
+    private final CommunicationManager mCommunicationManager;
     private BufferedReader mBufferReader;
 
     public ServerInStreamRunnable(Socket socket, CommunicationManager mCommunicationManager) {

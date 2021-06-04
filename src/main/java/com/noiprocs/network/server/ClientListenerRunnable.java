@@ -12,8 +12,8 @@ import java.util.List;
 
 // TODO: Handle case when client disconnects, remove from serverOutStreamRunnableList
 public class ClientListenerRunnable implements Runnable, ServerInterface {
-    private CommunicationManager mCommunicationManager;
-    private List<ServerOutStreamRunnable> serverOutStreamRunnableList = new ArrayList<>();
+    private final CommunicationManager mCommunicationManager;
+    private final List<ServerOutStreamRunnable> serverOutStreamRunnableList = new ArrayList<>();
 
 
     public ClientListenerRunnable(CommunicationManager mCommunicationManager) {

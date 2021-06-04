@@ -3,7 +3,7 @@ package com.noiprocs.network.server;
 import com.noiprocs.network.CommunicationManager;
 
 public class Server {
-    private CommunicationManager communicationManager = new CommunicationManager();
+    private final CommunicationManager communicationManager = new CommunicationManager();
 
     public void startService() {
         System.out.println("Server started");
