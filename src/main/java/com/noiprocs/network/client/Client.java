@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class Client implements SenderInterface {
     private final CommunicationManager communicationManager = new CommunicationManager();
-    private ClientOutStreamRunnable clientOutStreamRunnable;
+    private ClientOutStream clientOutStream;
 
     private final String hostName;
     private final int port;
@@ -28,9 +28,7 @@ public class Client implements SenderInterface {
             Thread clientInputThread = new Thread(clientInStreamRunnable);
             clientInputThread.start();
 
-            clientOutStreamRunnable = new ClientOutStreamRunnable(socket);
-            Thread clientOutputThread = new Thread(clientOutStreamRunnable);
-            clientOutputThread.start();
+            clientOutStream = new ClientOutStream(socket);
 
             // Close socket on JVM termination
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -53,6 +51,6 @@ public class Client implements SenderInterface {
 
     @Override
     public void sendMessage(byte[] bytes) {
-        clientOutStreamRunnable.sendMessage(bytes);
+        clientOutStream.sendMessage(bytes);
     }
 }

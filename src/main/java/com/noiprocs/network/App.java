@@ -52,6 +52,7 @@ public class App {
         while (message != null) {
             communicationManager.sendMessage(message.getBytes());
             message = in.nextLine();
+            System.out.println("Running threads: " + java.lang.Thread.activeCount());
         }
     }
 }

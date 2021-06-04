@@ -13,7 +13,8 @@ import java.util.List;
 // TODO: Handle case when client disconnects, remove from serverOutStreamRunnableList
 public class ClientListenerRunnable implements Runnable, SenderInterface {
     private final CommunicationManager mCommunicationManager;
-    private final List<ServerOutStreamRunnable> serverOutStreamRunnableList = new ArrayList<>();
+    private final List<ServerOutStream> serverOutStreamList = new ArrayList<>();
+    private final List<ServerOutStream> removeList = new ArrayList<>();
 
 
     public ClientListenerRunnable(CommunicationManager mCommunicationManager) {
@@ -45,10 +46,7 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
                     Thread serverInStreamThread = new Thread(serverInStreamRunnable);
                     serverInStreamThread.start();
 
-                    ServerOutStreamRunnable serverOutStreamRunnable = new ServerOutStreamRunnable(socket);
-                    serverOutStreamRunnableList.add(serverOutStreamRunnable);
-                    Thread serverOutStreamThread = new Thread(serverOutStreamRunnable);
-                    serverOutStreamThread.start();
+                    serverOutStreamList.add(new ServerOutStream(socket));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -60,8 +58,17 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
 
     @Override
     public void sendMessage(byte[] bytes) {
-        for (ServerOutStreamRunnable serverOutStreamRunnable: serverOutStreamRunnableList) {
-            serverOutStreamRunnable.sendMessage(bytes);
+        removeList.clear();
+        for (ServerOutStream serverOutStream : serverOutStreamList) {
+            try {
+                serverOutStream.sendMessage(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+                removeList.add(serverOutStream);
+            }
+        }
+        for (ServerOutStream serverOutStream : removeList) {
+            serverOutStreamList.remove(serverOutStream);
         }
     }
 
