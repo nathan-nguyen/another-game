@@ -2,20 +2,18 @@ package com.noiprocs.network.client;
 
 import com.noiprocs.network.CommunicationManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 // TODO: Destroy when server disconnects
 public class ClientInStreamRunnable implements Runnable {
     private final CommunicationManager communicationManager;
-    private BufferedReader mBufferReader;
+    private InputStream inputStream;
 
     public ClientInStreamRunnable(Socket socket, CommunicationManager communicationManager) {
         this.communicationManager = communicationManager;
         try {
-            mBufferReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            inputStream = socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,17 +22,23 @@ public class ClientInStreamRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            String answer;
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] bytes = new byte[16384];
             while (true) {
-                answer = mBufferReader.readLine();
-                if (answer == null) {
-                    System.out.println("Server disconnected");
+                int count = inputStream.read(bytes);
+                if (count == -1) {
+                    // Notify client that server is disconnected
                     communicationManager.serverDisconnect();
-                    break;
-                } else communicationManager.receiveMessage(hashCode(), answer);
+                    return;
+                }
+
+                buffer.write(bytes, 0, count);
+                communicationManager.receiveMessage(hashCode(), buffer.toByteArray());
+                buffer.reset();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Server disconnected");
             communicationManager.serverDisconnect();
         }
     }

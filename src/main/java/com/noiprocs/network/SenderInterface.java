@@ -1,5 +1,5 @@
 package com.noiprocs.network;
 
 public interface SenderInterface {
-    void sendMessage(String message);
+    void sendMessage(byte[] bytes);
 }

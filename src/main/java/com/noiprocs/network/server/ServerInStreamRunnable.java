@@ -2,20 +2,18 @@ package com.noiprocs.network.server;
 
 import com.noiprocs.network.CommunicationManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 // TODO: Handle case to destroy when client disconnects
 public class ServerInStreamRunnable implements Runnable {
     private final CommunicationManager mCommunicationManager;
-    private BufferedReader mBufferReader;
+    private InputStream inputStream;
 
     public ServerInStreamRunnable(Socket socket, CommunicationManager mCommunicationManager) {
         this.mCommunicationManager = mCommunicationManager;
         try {
-            mBufferReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.inputStream = socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,15 +22,19 @@ public class ServerInStreamRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            String answer;
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] bytes = new byte[16384];
             while (true) {
-                answer = mBufferReader.readLine();
-                if (answer == null) {
+                int count = inputStream.read(bytes);
+                if (count == -1) {
                     // Notify server that client is disconnected
                     mCommunicationManager.clientDisconnect(this.hashCode());
-                    break;
+                    return;
                 }
-                else mCommunicationManager.receiveMessage(this.hashCode(), answer);
+
+                buffer.write(bytes, 0, count);
+                mCommunicationManager.receiveMessage(this.hashCode(), buffer.toByteArray());
+                buffer.reset();
             }
         } catch (Exception e) {
             e.printStackTrace();

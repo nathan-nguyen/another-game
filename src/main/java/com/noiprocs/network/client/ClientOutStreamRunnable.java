@@ -1,16 +1,17 @@
 package com.noiprocs.network.client;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 // TODO: Handle case to destroy when server disconnect
 public class ClientOutStreamRunnable implements Runnable {
-    private PrintWriter mPrintWriter;
+    private OutputStream outputStream;
 
     public ClientOutStreamRunnable(Socket socket) {
         try {
-            mPrintWriter = new PrintWriter(socket.getOutputStream(), true);
+            outputStream = socket.getOutputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -20,7 +21,11 @@ public class ClientOutStreamRunnable implements Runnable {
     public void run() {
     }
 
-    public void sendMessage(String message) {
-        mPrintWriter.println(message);
+    public void sendMessage(byte[] bytes) {
+        try {
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

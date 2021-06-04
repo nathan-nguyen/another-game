@@ -59,9 +59,9 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(byte[] bytes) {
         for (ServerOutStreamRunnable serverOutStreamRunnable: serverOutStreamRunnableList) {
-            serverOutStreamRunnable.sendMessage(message);
+            serverOutStreamRunnable.sendMessage(bytes);
         }
     }
 

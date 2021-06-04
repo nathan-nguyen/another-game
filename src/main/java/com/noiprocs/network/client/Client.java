@@ -51,20 +51,8 @@ public class Client implements SenderInterface {
         return communicationManager;
     }
 
-
-
-    public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("java Client <ipAddress> <portNumber>");
-            return;
-        }
-
-        Client client = new Client(args[0], Integer.parseInt(args[1]));
-        client.startService();
-    }
-
     @Override
-    public void sendMessage(String message) {
-        clientOutStreamRunnable.sendMessage(message);
+    public void sendMessage(byte[] bytes) {
+        clientOutStreamRunnable.sendMessage(bytes);
     }
 }

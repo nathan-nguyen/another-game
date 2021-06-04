@@ -14,9 +14,4 @@ public class Server {
     public CommunicationManager getCommunicationManager() {
         return communicationManager;
     }
-
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.startService();
-    }
 }
