@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Client implements ServerInterface {
-    private CommunicationManager communicationManager = new CommunicationManager();
+    private final CommunicationManager communicationManager = new CommunicationManager();
     private ClientOutStreamRunnable clientOutStreamRunnable;
 
-    private String hostName;
-    private int port;
+    private final String hostName;
+    private final int port;
 
     public Client(String hostName, int port) {
         this.hostName = hostName;
