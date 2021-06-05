@@ -8,12 +8,12 @@ import java.net.Socket;
 // TODO: Destroy when server disconnects
 public class ClientInStreamRunnable implements Runnable {
     private final CommunicationManager communicationManager;
-    private InputStream inputStream;
+    private ObjectInputStream inputStream;
 
     public ClientInStreamRunnable(Socket socket, CommunicationManager communicationManager) {
         this.communicationManager = communicationManager;
         try {
-            inputStream = socket.getInputStream();
+            inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -22,19 +22,8 @@ public class ClientInStreamRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            byte[] bytes = new byte[16384];
             while (true) {
-                int count = inputStream.read(bytes);
-                if (count == -1) {
-                    // Notify client that server is disconnected
-                    communicationManager.serverDisconnect();
-                    return;
-                }
-
-                buffer.write(bytes, 0, count);
-                communicationManager.receiveMessage(hashCode(), buffer.toByteArray());
-                buffer.reset();
+                communicationManager.receiveMessage(hashCode(), inputStream.readObject());
             }
         } catch (Exception e) {
             e.printStackTrace();

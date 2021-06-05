@@ -50,7 +50,7 @@ public class Client implements SenderInterface {
     }
 
     @Override
-    public void sendMessage(byte[] bytes) {
-        clientOutStream.sendMessage(bytes);
+    public void sendMessage(Object object) {
+        clientOutStream.sendMessage(object);
     }
 }

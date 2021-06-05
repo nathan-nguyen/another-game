@@ -15,9 +15,11 @@ public class ClientOutStream {
         }
     }
 
-    public void sendMessage(byte[] bytes) {
+    public void sendMessage(Object object) {
         try {
+            byte[] bytes = ((String) object).getBytes();
             outputStream.write(bytes);
+            outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

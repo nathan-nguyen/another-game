@@ -18,8 +18,8 @@ public class CommunicationManager {
         receiver.clientDisconnect(clientId);
     }
 
-    public void receiveMessage(int clientId, byte[] bytes) {
-        receiver.receiveMessage(clientId, bytes);
+    public void receiveMessage(int clientId, Object object) {
+        receiver.receiveMessage(clientId, object);
     }
 
     public void setSender(SenderInterface mSender) {
@@ -30,7 +30,7 @@ public class CommunicationManager {
         this.receiver = receiver;
     }
 
-    public void sendMessage(byte[] bytes) {
-        mSender.sendMessage(bytes);
+    public void sendMessage(Object object){
+        mSender.sendMessage(object);
     }
 }

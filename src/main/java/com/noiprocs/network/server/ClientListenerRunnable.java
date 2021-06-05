@@ -57,11 +57,11 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
     }
 
     @Override
-    public void sendMessage(byte[] bytes) {
+    public void sendMessage(Object object) {
         removeList.clear();
         for (ServerOutStream serverOutStream : serverOutStreamList) {
             try {
-                serverOutStream.sendMessage(bytes);
+                serverOutStream.sendMessage(object);
             } catch (IOException e) {
                 e.printStackTrace();
                 removeList.add(serverOutStream);

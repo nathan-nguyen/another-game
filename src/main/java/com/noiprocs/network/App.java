@@ -10,8 +10,8 @@ public class App {
     public static void main(String[] args) {
         ClientInterface messagePrinter = new ClientInterface() {
             @Override
-            public void receiveMessage(int source, byte[] bytes) {
-                System.out.println("Received message from " + source + " - Content: " + new String(bytes));
+            public void receiveMessage(int source, Object object) {
+                System.out.println("Received message from " + source + " - Content: " + object);
             }
 
             @Override
@@ -50,7 +50,11 @@ public class App {
 
         String message = in.nextLine();
         while (message != null) {
-            communicationManager.sendMessage(message.getBytes());
+            try {
+                communicationManager.sendMessage(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             message = in.nextLine();
             System.out.println("Running threads: " + java.lang.Thread.activeCount());
         }

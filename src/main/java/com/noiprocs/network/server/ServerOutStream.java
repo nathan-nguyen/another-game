@@ -1,17 +1,19 @@
 package com.noiprocs.network.server;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ServerOutStream {
-    private OutputStream outputStream;
+    private final ObjectOutputStream outputStream;
 
     public ServerOutStream(Socket socket) throws IOException {
-        this.outputStream = socket.getOutputStream();
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
     }
 
-    public void sendMessage(byte[] bytes) throws IOException {
-        outputStream.write(bytes);
+    public void sendMessage(Object object) throws IOException {
+        outputStream.writeObject(object);
+        outputStream.flush();
+        outputStream.reset();
     }
 }
