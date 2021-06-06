@@ -8,7 +8,7 @@ import java.util.Scanner;
 // Example on how to use this library
 public class App {
     public static void main(String[] args) {
-        ClientInterface messagePrinter = new ClientInterface() {
+        ReceiverInterface messagePrinter = new ReceiverInterface() {
             @Override
             public void receiveMessage(int source, Object object) {
                 System.out.println("Received message from " + source + " - Content: " + object);
@@ -20,7 +20,7 @@ public class App {
             }
 
             @Override
-            public void clientConnectionNotify(int clientId) {
+            public void clientConnect(int clientId) {
                 System.out.println("Client " + clientId + " connected!");
             }
 

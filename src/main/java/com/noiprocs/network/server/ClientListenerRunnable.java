@@ -42,7 +42,7 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
                 try {
                     Socket socket = serverSocket.accept();
                     ServerInStreamRunnable serverInStreamRunnable = new ServerInStreamRunnable(socket, mCommunicationManager);
-                    mCommunicationManager.clientConnectionNotify(serverInStreamRunnable.hashCode());
+                    mCommunicationManager.clientConnect(serverInStreamRunnable.hashCode());
                     Thread serverInStreamThread = new Thread(serverInStreamRunnable);
                     serverInStreamThread.start();
 
