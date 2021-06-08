@@ -2,19 +2,21 @@ package com.noiprocs.network.server;
 
 import com.noiprocs.network.CommunicationManager;
 import com.noiprocs.network.Config;
-import com.noiprocs.network.SenderInterface;
+import com.noiprocs.network.ServerInterface;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-// TODO: Handle case when client disconnects, remove from serverOutStreamRunnableList
-public class ClientListenerRunnable implements Runnable, SenderInterface {
+
+public class ClientListenerRunnable implements Runnable, ServerInterface {
     private final CommunicationManager mCommunicationManager;
-    private final List<ServerOutStream> serverOutStreamList = new ArrayList<>();
-    private final List<ServerOutStream> removeList = new ArrayList<>();
+    private final Map<Integer, ServerOutStream> serverOutStreamMap = new HashMap<>();
+    private final List<Integer> removeClientIdList = new ArrayList<>();
 
 
     public ClientListenerRunnable(CommunicationManager mCommunicationManager) {
@@ -41,12 +43,17 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
             while (!serverSocket.isClosed()) {
                 try {
                     Socket socket = serverSocket.accept();
-                    ServerInStreamRunnable serverInStreamRunnable = new ServerInStreamRunnable(socket, mCommunicationManager);
-                    mCommunicationManager.clientConnect(serverInStreamRunnable.hashCode());
+                    ServerInStreamRunnable serverInStreamRunnable = new ServerInStreamRunnable(
+                            socket, mCommunicationManager
+                    );
+
+                    int clientId = serverInStreamRunnable.hashCode();
+                    mCommunicationManager.clientConnect(clientId);
+
                     Thread serverInStreamThread = new Thread(serverInStreamRunnable);
                     serverInStreamThread.start();
 
-                    serverOutStreamList.add(new ServerOutStream(socket));
+                    serverOutStreamMap.put(clientId, new ServerOutStream(socket));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -58,18 +65,26 @@ public class ClientListenerRunnable implements Runnable, SenderInterface {
 
     @Override
     public void sendMessage(Object object) {
-        removeList.clear();
-        for (ServerOutStream serverOutStream : serverOutStreamList) {
+        removeClientIdList.clear();
+        serverOutStreamMap.forEach((clientId, serverOutStream) -> {
             try {
                 serverOutStream.sendMessage(object);
             } catch (IOException e) {
                 e.printStackTrace();
-                removeList.add(serverOutStream);
+                removeClientIdList.add(clientId);
             }
-        }
-        for (ServerOutStream serverOutStream : removeList) {
-            serverOutStreamList.remove(serverOutStream);
-        }
+        });
+
+        removeClientIdList.forEach(serverOutStreamMap::remove);
     }
 
+    @Override
+    public void sendMessage(int clientId, Object object) {
+        try {
+            serverOutStreamMap.get(clientId).sendMessage(object);
+        } catch (IOException e) {
+            e.printStackTrace();
+            serverOutStreamMap.remove(clientId);
+        }
+    }
 }

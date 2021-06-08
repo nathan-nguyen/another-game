@@ -33,4 +33,8 @@ public class CommunicationManager {
     public void sendMessage(Object object){
         sender.sendMessage(object);
     }
+
+    public void sendMessage(int clientId, Object object) {
+        ((ServerInterface) sender).sendMessage(clientId, object);
+    }
 }
